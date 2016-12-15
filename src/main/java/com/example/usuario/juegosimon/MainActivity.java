@@ -141,5 +141,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public int Random(){ // Genera los numeros aleatorios a los que les asignaremos un color.
+        int numColor = (int) Math.floor(Math.random()*4);
+        return numColor;
+
+
+
+    }
+
 
 }
