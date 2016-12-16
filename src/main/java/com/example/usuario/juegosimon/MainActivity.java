@@ -13,7 +13,22 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
+
+import java.util.*;
+
+
 public class MainActivity extends AppCompatActivity {
+
     MediaPlayer mpb, mpr, mpg, mpy, mpf, mpw;
 
     TextView Text;
@@ -21,61 +36,53 @@ public class MainActivity extends AppCompatActivity {
     TimerTask JobTimer;
     Timer timer;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MediaPlayer mpb,mpr,mpg,mpy,mpf,mpw;
-
-        TextView Text;
-        Button ButtonGreen, ButtonYellow, ButtonRed, ButtonBlue, Start;
-        TimerTask JobTimer;
-        Timer timer;
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
 
+        mpb = MediaPlayer.create(this, R.raw.blue);
+        mpg = MediaPlayer.create(this, R.raw.green);
+        mpr = MediaPlayer.create(this, R.raw.red);
+        mpy = MediaPlayer.create(this, R.raw.yellow);
+        mpw = MediaPlayer.create(this, R.raw.win);
+        mpf = MediaPlayer.create(this, R.raw.loose);
 
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+        Start = (Button) findViewById(R.id.buttonStart);
+        ButtonGreen = (Button) findViewById(R.id.buttonGreen);
+        ButtonRed = (Button) findViewById(R.id.buttonRed);
+        ButtonBlue = (Button) findViewById(R.id.buttonBlue);
+        ButtonYellow = (Button) findViewById(R.id.buttonYellow);
+        Text = (TextView) findViewById(R.id.textView);
 
-
-            mpb = MediaPlayer.create(this, R.raw.blue);
-            mpg = MediaPlayer.create(this, R.raw.green);
-            mpr = MediaPlayer.create(this, R.raw.red);
-            mpy = MediaPlayer.create(this, R.raw.yellow);
-            mpw = MediaPlayer.create(this, R.raw.win);
-            mpf = MediaPlayer.create(this, R.raw.loose);
-
-            Start = (Button) findViewById(R.id.buttonStart);
-            ButtonGreen= (Button) findViewById(R.id.buttonGreen);
-            ButtonRed = (Button) findViewById(R.id.buttonRed);
-            ButtonBlue = (Button) findViewById(R.id.buttonBlue);
-            ButtonYellow = (Button) findViewById(R.id.buttonYellow);
-            Text = (TextView) findViewById(R.id.textView);
-
-
-
-
-
-        }
-        ArrayList<Integer> randomColor = new ArrayList();
-        ArrayList<Integer> ChosenColor = new ArrayList();
-        protected static int LVL=3; // Marcará el nivel (número de colores que aparecerán).
-        protected static int CONT=0;// Cuenta las veces que pulsamos un botón.
-
-        int Level=1;
-    void StartEvent(View a){ //Ejecutará el juego y marcará en un TextView la dificultad en la que nos encontramos
-
-        CONT =0;
-        StartTimer();
-        Text.setText("Level : "+Level);
 
     }
-    void InitTimer (){ // Este metodo hará que los parpadeos de los botones se respetarán y no se colapsarán al aparecer todos a la vez.
+
+    ArrayList<Integer> randomColor = new ArrayList();
+    ArrayList<Integer> ChosenColor = new ArrayList();
+    protected static int LVL = 3; // Marcará el nivel (número de colores que aparecerán).
+    protected static int CONT = 0;// Cuenta las veces que pulsamos un botón.
+
+    int Level = 1;
+
+    void StartEvent(View a) { //Ejecutará el juego y marcará en un TextView la dificultad en la que nos encontramos
+
+        CONT = 0;
+        StartTimer();
+        Text.setText("Level : " + Level);
+
+    }
+
+    void InitTimer() { // Este metodo hará que los parpadeos de los botones se respetarán y no se colapsarán al aparecer todos a la vez.
         JobTimer = new TimerTask() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int numero=Random();
+                        int numero = Random();
                         randomColor.add(numero);
 
                         if (numero == 0) {
@@ -122,9 +129,9 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                         CONT++;
-                        if(CONT==LVL){
+                        if (CONT == LVL) {
                             StopTimer();
-                            CONT=0;
+                            CONT = 0;
                         }
 
                     }
@@ -135,10 +142,9 @@ public class MainActivity extends AppCompatActivity {
         LVL++;
 
 
-
     }
 
-    void GreenEvent(View gr){
+    void GreenEvent(View gr) {
         ButtonGreen = (Button) findViewById(R.id.buttonGreen);
         mpg.start();
         ChosenColor.add(0);
@@ -156,7 +162,8 @@ public class MainActivity extends AppCompatActivity {
         Check();
 
     }
-    void RedEvent(View r){
+
+    void RedEvent(View r) {
         final Button ButtonRed = (Button) findViewById(R.id.buttonRed);
         mpr.start();
         ChosenColor.add(1);
@@ -173,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
         Check();
 
     }
-    void BlueEvent(View bl){
+
+    void BlueEvent(View bl) {
         final Button ButtonBlue = (Button) findViewById(R.id.buttonBlue);
         mpb.start();
         ChosenColor.add(2);
@@ -191,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void YellowEvent(View ye){
+    void YellowEvent(View ye) {
         final Button ButtonYellow = (Button) findViewById(R.id.buttonYellow);
         mpy.start();
         ChosenColor.add(3);
@@ -210,16 +218,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    public void StartTimer(){ // Llama a InitTimer ( Metodo que hace que los botones no se colapsen) y asigna el tiempo que queremos que se ejecute cada boton.
+    public void StartTimer() { // Llama a InitTimer ( Metodo que hace que los botones no se colapsen) y asigna el tiempo que queremos que se ejecute cada boton.
         timer = new Timer();
         InitTimer();
         timer.schedule(JobTimer, 100, 1000);
     }
-    public void StopTimer(){ // Para el timer para evitar la eterna ejecución.
-        if (timer !=null){
+
+    public void StopTimer() { // Para el timer para evitar la eterna ejecución.
+        if (timer != null) {
             timer.cancel();
-            timer= null;
+            timer = null;
         }
     }
 
@@ -230,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
             if (ran.equals(chos)) {
                 Toast.makeText(getApplicationContext(), "HAS GANADO", Toast.LENGTH_SHORT).show();
                 mpw.start();
-                int numColor = (int) Math.floor(Math.random()*4);
+                int numColor = (int) Math.floor(Math.random() * 4);
                 randomColor.add(numColor);
                 randomColor.clear();
                 ChosenColor.clear();
@@ -238,24 +246,24 @@ public class MainActivity extends AppCompatActivity {
             } else { // En caso de perder limpia ambos arrays y restablece la dificultad al primer nivel.
                 Toast.makeText(getApplicationContext(), "HAS PERDIDO", Toast.LENGTH_SHORT).show();
                 mpf.start();
-                CONT=0;
+                CONT = 0;
 
-                LVL=3;
-                Level=1;
+                LVL = 3;
+                Level = 1;
             }
             ChosenColor.clear();
 
         }
     }
 
-    public int Random(){ // Genera los numeros aleatorios a los que les asignaremos un color.
-        int numColor = (int) Math.floor(Math.random()*4);
+    public int Random() { // Genera los numeros aleatorios a los que les asignaremos un color.
+        int numColor = (int) Math.floor(Math.random() * 4);
         return numColor;
-
 
 
     }
 
 
-
 }
+
+
